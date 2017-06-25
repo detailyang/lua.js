@@ -13,9 +13,20 @@ stat        ::=   <do_stat>
 
 do_stat     ::=  `do` <block> `end`
 break_stat  ::=  `break`
+/*
+    must have a loop to break
+ */
+
 return_stat ::=  `return` <explist>
+/*
+    must be last statement in a block
+ */
 
 expr_stat   ::=  <primaryexp> (<func> | <assignment>)
+/*
+    if LHS is VCALL then func, otherwise assignment
+    for func, LHS is VCALL if funcargs in expression
+ */
 
 assignment  ::= ',' <primaryexp> <assignment>
                | '=' <explist1>
@@ -32,7 +43,7 @@ local_stat  ::= `local` <NAME> {',' <NAME>} ['=' <explist1>]
 
 explist1    ::= <expr> {',' <expr>}
 
-if_stat     ::= `if` <cond> `then` <block>
+if_stat     ::= `if` <cond> `then` <block> {`elseif` <cond> `then` <block>} [`else` <block>] `end`
 <cond>      ::= <expr>
 
 for_stat    ::= <fornum> | <forlist>
