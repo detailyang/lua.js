@@ -1,0 +1,74 @@
+chunk       ::=   {<stat> [`;`]}
+block       ::=   <chunk>
+stat        ::=   <do_stat>
+              |   <break_stat>
+              |   <return_stat>
+              |   <expr_stat>
+              |   <func_stat>
+              |   <local_stat>
+              |   <if_stat>
+              |   <for_stat>
+              |   <while_stat>
+              |   <repeat_stat>
+
+do_stat     ::=  `do` <block> `end`
+break_stat  ::=  `break`
+return_stat ::=  `return` <explist>
+
+expr_stat   ::=  <primaryexp> (<func> | <assignment>)
+
+assignment  ::= ',' <primaryexp> <assignment>
+               | '=' <explist1>
+
+func_stat   ::= `function` <funcname> <body>
+funcname    ::= <NAME> {',' <NAME>} [':' <NAME>]
+
+body        ::= '(' <parlist> ')' <chunk> 'end'
+parlist     ::= [<param> {',' <param>}]
+param       ::= <NAME>
+
+local_stat  ::= `local` <NAME> {',' <NAME>} ['=' <explist1>]
+              | `local` `function` <NAME> <body>
+
+explist1    ::= <expr> {',' <expr>}
+
+if_stat     ::= `if` <cond> `then` <block>
+<cond>      ::= <expr>
+
+for_stat    ::= <fornum> | <forlist>
+fornum      ::= <NAME> {',' <NAME>} 'in' <explist1> <forbody> 'end'
+forlist     ::= <NAME> '=' <exp1>, <exp1> [',' <exp1>] <forbody> 'end'
+forbody     ::= 'do' <block>
+
+while_stat  ::= `while` <cond> `do` <block> `end`
+repeat_stat ::= `repeat` <chunk> `until` <cond>
+
+assignment  ::= ',' <primaryexp> <assignment>
+              | '=' <explist1>
+primaryexp  ::= <prefixexp> {'.' <NAME> | '[' <exp> ']' | ':' <NAME> <funcargs> | <funcargs> }
+prefixexp   ::= <NAME> | '(' <exp> ')'
+funcargs    ::= '(' [<explist1>] ')'
+              | constructor
+              | STRING
+expr        ::= <subexpr>
+subexpr     ::= (<UNOPR> <subexpr> | <simpleexp>) {<BINOPR> <subexpr>}
+simpleexp   ::= NUMBER
+              | STRING
+              | NIL
+              | TRUE
+              | FALSE
+              | ...
+              | <constructor>
+              | 'function' <body>
+              | <primaryexp>
+
+constructor ::=  '{' [<field> {<fieldsep> <field>} [<fieldsep>] ] '}'
+fieldsep    ::= ','
+              | ';'
+field       ::= <recfield>
+              | <listfield>
+
+recfield    ::= ( <NAME> | '[' exp1 ']' ) = exp1
+listfield   ::= <expr>
+
+exp1        ::= <expr>
