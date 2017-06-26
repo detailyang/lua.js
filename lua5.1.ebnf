@@ -32,7 +32,7 @@ assignment  ::= ',' <primaryexp> <assignment>
                | '=' <explist1>
 
 func_stat   ::= `function` <funcname> <body>
-funcname    ::= <NAME> {',' <NAME>} [':' <NAME>]
+funcname    ::= <NAME> {'.' <NAME>} [':' <NAME>]
 
 body        ::= '(' <parlist> ')' <chunk> 'end'
 parlist     ::= [<param> {',' <param>}]
@@ -56,8 +56,8 @@ repeat_stat ::= `repeat` <chunk> `until` <cond>
 
 assignment  ::= ',' <primaryexp> <assignment>
               | '=' <explist1>
-primaryexp  ::= <prefixexp> {'.' <NAME> | '[' <exp> ']' | ':' <NAME> <funcargs> | <funcargs> }
-prefixexp   ::= <NAME> | '(' <exp> ')'
+primaryexp  ::= <prefixexp> {'.' <NAME> | '[' <expr> ']' | ':' <NAME> <funcargs> | <funcargs> }
+prefixexp   ::= <NAME> | '(' <expr> ')'
 funcargs    ::= '(' [<explist1>] ')'
               | constructor
               | STRING
