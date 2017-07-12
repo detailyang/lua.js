@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2017-06-26 11:23:20
 * @Last Modified by:   detailyang
-* @Last Modified time: 2017-07-11 22:26:19
+* @Last Modified time: 2017-07-13 00:58:42
 */
 
 'use strict';
@@ -11,8 +11,14 @@
 const Lua = require("./lib");
 
 const code = `
+do
+    local x,y = 1,2
+    print(-x, (y+1)*2-5/x)
+end
+
 local x = {x = 1, y = 2}
 print(x.x+x.x);
+x.x = 2;
 if x.x + 1 > 1000 then
     print("haha")
 elseif x.x + 1 > 2000 then
@@ -66,7 +72,13 @@ env.def("print", (...args) => {
 
 env.def("pairs", (table) => {
     let i = 0;
-    const keys = Object.keys(table);
+    const keys = Object.keys(table).filter((key) => {
+        if (/\d+/.test(key)) {
+            return false;
+        }
+
+        return true;
+    });
     return () => {
         if (i++ < keys.length) {
             return {
@@ -105,5 +117,7 @@ env.def("ipairs", (table) => {
     };
 });
 
+const generator = new Lua.Generator(ast);
 const interpreter = new Lua.Interpreter(ast, env);
 interpreter.interprete();
+console.log(generator.to_js());
